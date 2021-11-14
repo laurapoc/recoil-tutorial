@@ -1,19 +1,12 @@
 import { useEffect } from "react";
-import { atom, useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
-const repoState = atom({
-  key: "repos",
-  default: [],
-});
-
-export const viewAtom = atom({
-  key: "view",
-  default: "5",
-});
+import { repos as reposAtom, view as viewAtom } from "./atoms";
+import Menu from "./menu";
 
 function App(): JSX.Element {
-  const [repos, setRepos] = useRecoilState(repoState);
-  const view = useRecoilValue(viewAtom)
+  const [repos, setRepos] = useRecoilState(reposAtom);
+  const view = useRecoilValue(viewAtom);
 
   useEffect(() => {
     const getRepos = async () => {
@@ -26,12 +19,11 @@ function App(): JSX.Element {
     getRepos();
   }, [setRepos, view]);
 
-  console.log(repos);
 
   return (
     <>
+      <Menu />
       {repos.map((repo: any) => {
-        console.log(repo);
         return (
           <div key={repo.url}>
             <a href={repo.url}>
