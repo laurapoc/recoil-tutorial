@@ -1,24 +1,30 @@
 import { useEffect } from "react";
-import { atom, useRecoilState } from "recoil";
+import { atom, useRecoilState, useRecoilValue } from "recoil";
 
 const repoState = atom({
   key: "repos",
   default: [],
 });
 
+export const viewAtom = atom({
+  key: "view",
+  default: "5",
+});
+
 function App(): JSX.Element {
   const [repos, setRepos] = useRecoilState(repoState);
+  const view = useRecoilValue(viewAtom)
 
   useEffect(() => {
     const getRepos = async () => {
-      const url = "https://api.github.com/users/laurapoc/repos";
+      const url = `https://api.github.com/users/laurapoc/repos?per_page=${view}`;
       const resp = await fetch(url);
       const body = await resp.json();
       setRepos(body);
     };
 
     getRepos();
-  }, [setRepos]);
+  }, [setRepos, view]);
 
   console.log(repos);
 
